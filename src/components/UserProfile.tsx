@@ -11,7 +11,6 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import Link from "next/link";
-import ChangePasswordBtn from "./ChangePasswordBtn";
 import ChangeEmailBtn from "./ChangeEmailBtn";
 import {DialogPopup} from "./DialogPopup";
 import {AlertDialogModal} from "./AlertDialogModal";
@@ -39,7 +38,11 @@ const UserProfile = async () => {
             <p className="text-sm font-medium text-gray-500">Name</p>
             <div className="flex justify-between items-center">
               <p className="text-lg">{user.name}</p>
-              <DialogPopup />
+              <DialogPopup
+                title="Change Name"
+                type="name"
+                description="Make changes to your name here. Click /Update/ when youre done."
+              />
             </div>
           </div>
           <div className="space-y-1">
@@ -53,7 +56,11 @@ const UserProfile = async () => {
             <p className="text-sm font-medium text-gray-500">Password</p>
             <div className="flex justify-between items-center">
               <p className="text-lg">•••••••••••••••</p>
-              <ChangePasswordBtn />
+              <DialogPopup
+                title="Change Password"
+                type="password"
+                description="Make changes to your password here. Click /Update/ when youre done."
+              />
             </div>
           </div>
 

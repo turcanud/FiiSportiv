@@ -1,9 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use server";
 
 import {z} from "zod";
 import {redirect} from "next/navigation";
-import {changeNameSchema, signInSchema, signUpSchema} from "./schemas";
+import {
+  changeNameSchema,
+  changePasswordSchema,
+  signInSchema,
+  signUpSchema,
+} from "./schemas";
 
 import {prisma as db} from "@/lib/prisma";
 import {
@@ -12,7 +16,6 @@ import {
   hashPassword,
 } from "./core/passwordHasher";
 import {
-  changeNameFromSession,
   createUserSession,
   getUserFromSession,
   removeUserFromSession,
@@ -42,7 +45,7 @@ export async function signIn(unsafeData: z.infer<typeof signInSchema>) {
     if (!passwordCheck) return "Unable to log u in";
     await createUserSession(user, await cookies());
   } catch (error) {
-    return "Something went wrong";
+    return "Something went wrong: " + error;
   }
   redirect("/");
 }
@@ -74,7 +77,7 @@ export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
     if (user == null) return "Unable creating the account";
     await createUserSession(user, await cookies());
   } catch (error) {
-    return "Unable creating the account";
+    return "Unable creating the account: " + error;
   }
   redirect("/");
 }
@@ -84,7 +87,45 @@ export async function logOut(): Promise<void> {
   redirect("/");
 }
 
-export async function changePassword(): Promise<void> {}
+export async function changePassword(
+  unsafeData: z.infer<typeof changePasswordSchema>
+) {
+  const {success, data} = changePasswordSchema.safeParse(unsafeData);
+  if (!success) return "Something went wrong";
+  try {
+    const userId = await getUserFromSession(await cookies());
+
+    const user = await db.user.findUnique({
+      where: {id: userId?.id},
+      select: {
+        password: true,
+        salt: true,
+      },
+    });
+    if (user == null) return "Unable to log u in";
+
+    const passwordCheck = await comparePasswords({
+      hashedPassword: user.password,
+      password: data.currentPassword,
+      salt: user.salt,
+    });
+
+    if (!passwordCheck) return "Unable to log u in";
+
+    const salt = generateSalt();
+    const hashedPassword = await hashPassword(data.newPassword, salt);
+
+    await db.user.update({
+      where: {id: userId?.id},
+      data: {password: hashedPassword, salt: salt},
+    });
+  } catch (error) {
+    console.error("Failed to update name:", error);
+    return "Failed to update name. Please try again.";
+  }
+  redirect("/");
+}
+
 export async function changeEmail(): Promise<void> {}
 
 export async function deleteAccount() {
@@ -103,7 +144,7 @@ export async function changeName(unsafeData: z.infer<typeof changeNameSchema>) {
   const {success, data} = changeNameSchema.safeParse(unsafeData);
   if (!success) return "Something went wrong";
   try {
-    const userId = await changeNameFromSession(await cookies());
+    const userId = await getUserFromSession(await cookies());
     await db.user.update({
       where: {id: userId?.id},
       data: {name: data.name},

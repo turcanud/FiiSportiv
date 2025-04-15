@@ -53,9 +53,3 @@ async function getUserSessionById(sessionId: string) {
   const {success, data: user} = sessionSchema.safeParse(rawUser);
   return success ? user : null;
 }
-
-export async function changeNameFromSession(cookies: Pick<Cookies, "get">) {
-  const sessionId = cookies.get(COOKIE_SESSION_KEY)?.value;
-  if (sessionId == null) return null;
-  return getUserSessionById(sessionId);
-}
