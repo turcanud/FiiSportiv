@@ -1,16 +1,10 @@
-import {z} from "zod";
 import {redisClient} from "@/redis/redis";
-import {Cookies} from "../schemas";
-import {generateSessionId} from "./passwordHasher";
+import {Cookies, sessionSchema, UserSession} from "../schemas";
+import {generateSessionId} from "./crypting.security";
 
-const SESSION_EXPIRATION_SECONDS = 60 * 60 * 24 * 7;
 const COOKIE_SESSION_KEY = "session-id";
 
-const sessionSchema = z.object({
-  id: z.string(),
-});
-
-type UserSession = z.infer<typeof sessionSchema>;
+const SESSION_EXPIRATION_SECONDS = 60 * 60 * 24 * 7;
 
 export async function createUserSession(
   user: UserSession,
@@ -34,6 +28,7 @@ export async function setCookie(
     expires: Date.now() + SESSION_EXPIRATION_SECONDS * 1000,
   });
 }
+
 export function getUserFromSession(cookies: Pick<Cookies, "get">) {
   const sessionId = cookies.get(COOKIE_SESSION_KEY)?.value;
   if (sessionId == null) return null;

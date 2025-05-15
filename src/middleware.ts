@@ -1,5 +1,5 @@
 import {NextResponse, type NextRequest} from "next/server";
-import {getUserFromSession} from "./auth/core/session";
+import {getUserFromSession} from "./auth/core.actions/user.session";
 
 const authRoutes = ["/sign-up", "/sign-in"];
 // const privateRoutes = ["/private"];

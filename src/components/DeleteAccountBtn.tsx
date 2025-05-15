@@ -1,4 +1,4 @@
-import {deleteAccount} from "@/auth/actions";
+import {deleteAccount} from "@/auth/profile/profile.actions";
 import ActionButton from "./ActionButton";
 
 const DeleteAccountBtn = () => (

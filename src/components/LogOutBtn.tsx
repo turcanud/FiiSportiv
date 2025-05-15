@@ -1,4 +1,4 @@
-import {logOut} from "@/auth/actions";
+import {logOut} from "@/auth/auth.actions";
 import ActionButton from "./ActionButton";
 
 const LogOutBtn = () => (

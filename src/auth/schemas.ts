@@ -89,6 +89,15 @@ export const signUpSchema = z
     path: ["confirmPassword"],
   });
 
+export const verificationCodeSchema = z.object({
+  code: z.string(),
+});
+
+export const sessionSchema = z.object({
+  id: z.string(),
+});
+export type UserSession = z.infer<typeof sessionSchema>;
+
 export type Cookies = {
   set: (
     key: string,

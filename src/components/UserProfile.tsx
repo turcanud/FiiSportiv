@@ -11,7 +11,6 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import Link from "next/link";
-import ChangeEmailBtn from "./ChangeEmailBtn";
 import {DialogPopup} from "./DialogPopup";
 import {AlertDialogModal} from "./AlertDialogModal";
 
@@ -49,7 +48,12 @@ const UserProfile = async () => {
             <p className="text-sm font-medium text-gray-500">Email</p>
             <div className="flex justify-between items-center">
               <p className="text-lg">{user.email}</p>
-              <ChangeEmailBtn />
+              <DialogPopup
+                title="Change Email"
+                type="email"
+                description={`Insert the one-time password sent to ${user.email}. Available only for 10 minutes.`}
+                email={user.email}
+              />
             </div>
           </div>
           <div className="space-y-1">

@@ -1,6 +1,6 @@
 import {cookies} from "next/headers";
 import {cache} from "react";
-import {getUserFromSession} from "./core/session";
+import {getUserFromSession} from "./core.actions/user.session";
 import {prisma as db} from "@/lib/prisma";
 import {redirect} from "next/navigation";
 

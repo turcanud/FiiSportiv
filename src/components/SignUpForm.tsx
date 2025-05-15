@@ -14,7 +14,7 @@ import {
 
 import {Input} from "@/components/ui/input";
 import {signUpSchema} from "@/auth/schemas";
-import {signUp} from "@/auth/actions";
+import {signUp} from "@/auth/auth.actions";
 import {useState} from "react";
 
 export function SignUpForm() {

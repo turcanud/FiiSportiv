@@ -14,7 +14,7 @@ import {
 import {Input} from "@/components/ui/input";
 import {signInSchema} from "@/auth/schemas";
 import {useState} from "react";
-import {signIn} from "@/auth/actions";
+import {signIn} from "@/auth/auth.actions";
 
 export function SignInForm() {
   const [error, setError] = useState<string>();
@@ -55,7 +55,6 @@ export function SignInForm() {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="password"
